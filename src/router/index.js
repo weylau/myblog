@@ -5,7 +5,6 @@ import article from '@/components/article'
 import about from '@/components/about'
 
 Vue.use(Router)
-
 export default new Router({
   routes: [
     {
@@ -22,6 +21,11 @@ export default new Router({
       path: '/about',
       name: 'about',
       component: about
+    },
+    {
+      path: '/t',
+      name: 't',
+      component: require('@/components/test/test')
     }
   ]
 })

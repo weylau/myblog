@@ -18,12 +18,14 @@
 
                 <div v-for="(value,key,index) in datalist"  class="item mb-5">
                     <div class="media">
-                        <img class="mr-3 img-fluid post-thumb d-none d-md-flex" :src="value.img" alt="image">
+                        <img class="mr-3 img-fluid post-thumb d-none d-md-flex" :src="value.img_path" alt="image">
                         <div class="media-body">
-                            <h3 class="title mb-1"><a href="javascript:void(0);" @click="toArticle(value.id)">{{value.title}}</a></h3>
-                            <div class="meta mb-1"><span class="date">{{value.update_date}} 发布</span><span class="time">{{value.read_nums}} 阅读</span><span class="comment"><a href="#">{{value.comment_nums}} 评论</a></span></div>
-                            <div class="intro">{{value.introduction}}...</div>
-                            <a class="more-link" href="javascript:void(0);" @click="toArticle(value.id)">Read more &rarr;</a>
+                            <h3 class="title mb-1"><a href="javascript:void(0);" @click="toArticle(value.article_id)">{{value.title}}</a></h3>
+                            <div class="meta mb-1"><span class="date">{{value.update_date}} 发布</span>
+<!--                                <span class="time">{{value.read_nums}} 阅读</span><span class="comment"><a href="#">{{value.comment_nums}} 评论</a></span>-->
+                            </div>
+                            <div class="intro">{{value.description}}...</div>
+                            <a class="more-link" href="javascript:void(0);" @click="toArticle(value.article_id)">Read more &rarr;</a>
                         </div><!--//media-body-->
                     </div><!--//media-->
                 </div><!--//item-->
@@ -41,48 +43,16 @@
 
 
 <script>
+    import axios from 'axios'
     export default {
-        name: 'blog-index',
+        // name: 'blog-index',
         data() {
             return {
+                page:1,
+                page_size:10,
                 msg: 'this is index',
                 datalist:[
-                    {
-                        id:1,
-                        title:"这是文章标题1",
-                        introduction:"这是文章的简介这是文章的简介这是文章的简介",
-                        img:require("../assets/images/blog/blog-post-thumb-1.jpg"),
-                        update_date:"2019-08-16",
-                        read_nums:"5",
-                        comment_nums:"6",
-                    },
-                    {
-                        id:2,
-                        title:"这是文章标题2",
-                        introduction:"这是文章的简介这是文章的简介这是文章的简介",
-                        img:require("../assets/images/blog/blog-post-thumb-2.jpg"),
-                        update_date:"2019-08-16",
-                        read_nums:"5",
-                        comment_nums:"6",
-                    },
-                    {
-                        id:3,
-                        title:"这是文章标题3",
-                        introduction:"这是文章的简介这是文章的简介这是文章的简介",
-                        img:require("../assets/images/blog/blog-post-thumb-3.jpg"),
-                        update_date:"2019-08-16",
-                        read_nums:"5",
-                        comment_nums:"6",
-                    },
-                    {
-                        id:4,
-                        title:"这是文章标题4",
-                        introduction:"这是文章的简介这是文章的简介这是文章的简介",
-                        img:require("../assets/images/blog/blog-post-thumb-4.jpg"),
-                        update_date:"2019-08-16",
-                        read_nums:"5",
-                        comment_nums:"6",
-                    }
+
                 ],
                 toArticle:function(id){
                     this.$router.push({
@@ -95,6 +65,30 @@
             }
         },
         components:{
+        },
+        created(){
+            this.getList()
+        },
+        methods:{
+            getList:function() {
+                axios.get(this.Api.getList+"?page="+this.page+"&page_size="+this.page_size).then(res => {
+
+                    res.data.data.forEach((item,index,arr)=>{
+                        if (item.img_path == '') {
+                            arr[index].img_path = this.getDefaultImg()
+                        }
+                        console.log(arr)
+                    })
+                    console.log(res.data.data)
+                    this.datalist = res.data.data
+                    this.page++
+                })
+            },
+            getDefaultImg:function() {
+                var num = Math.floor(Math.random() * 12) + 1
+                console.log("getDefaultImg:"+num)
+                return require("../assets/images/blog/blog-post-thumb-"+num+".jpg")
+            }
         }
     }
 </script>
