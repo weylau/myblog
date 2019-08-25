@@ -2,7 +2,10 @@
   <div id="app">
     <blog-header></blog-header>
     <div class="main-wrapper">
-      <router-view/>
+      <keep-alive>
+        <router-view v-if="$route.meta.keepAlive"></router-view>
+      </keep-alive>
+      <router-view v-if="!$route.meta.keepAlive"></router-view>
     </div>
     <blog-footer></blog-footer>
   </div>

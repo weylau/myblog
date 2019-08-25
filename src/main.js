@@ -4,6 +4,9 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import api from './api'
+import Highlight from './assets/plugins/highlight/highlight.js'
+
+Vue.use(Highlight)
 
 Vue.config.productionTip = false
 Vue.prototype.Api=api;

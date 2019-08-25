@@ -6,26 +6,40 @@ import about from '@/components/about'
 
 Vue.use(Router)
 export default new Router({
+  scrollBehavior (to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      return { x: 0, y: 0 }
+    }
+  },
   routes: [
     {
       path: '/',
       name: 'index',
-      component: index
+      component: index,
+      meta: {
+        keepAlive: true // 需要缓存
+      }
+
     },
     {
       path: '/article',
       name: 'article',
-      component: article
+      component: article,
+      meta: {
+        keepAlive: false
+      }
+
     },
     {
       path: '/about',
       name: 'about',
-      component: about
-    },
-    {
-      path: '/t',
-      name: 't',
-      component: require('@/components/test/test')
+      component: about,
+      meta: {
+        keepAlive: false
+      }
+
     }
   ]
 })
