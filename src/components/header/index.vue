@@ -36,10 +36,10 @@
                     </template>
 
                     <li v-if="current_nav_id == -1" class="nav-item active">
-                        <a  class="nav-link" href="javascript:void(0);" @click="toPage('/about')"><i class="fas fa-user fa-fw mr-2"></i>关于我</a>
+                        <a  class="nav-link" href="javascript:void(0);" @click="toPage('/about', -1)"><i class="fas fa-user fa-fw mr-2"></i>关于我</a>
                     </li>
                     <li v-else class="nav-item">
-                        <a  class="nav-link" href="javascript:void(0);" @click="toPage('/about')"><i class="fas fa-user fa-fw mr-2"></i>关于我</a>
+                        <a  class="nav-link" href="javascript:void(0);" @click="toPage('/about', -1)"><i class="fas fa-user fa-fw mr-2"></i>关于我</a>
                     </li>
                 </ul>
 

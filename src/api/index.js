@@ -1,4 +1,4 @@
-const BASEURL = "http://172.30.52.120:9001/"
+const BASEURL = "https://myblog-api.ajnote.cn/"
 const URL = {
     getList:BASEURL+'article/list',
     getDetail:BASEURL+'article/detail',
