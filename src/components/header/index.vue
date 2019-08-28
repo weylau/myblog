@@ -20,23 +20,26 @@
                 </div><!--//profile-section-->
 
                 <ul class="navbar-nav flex-column text-left">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="javascript:void(0);" @click="toPage('/')"><i class="fas fa-home fa-fw mr-2"></i>首页<span class="sr-only">(current)</span></a>
+                    <li v-if="current_nav_id == 0"  class="nav-item active">
+                        <a class="nav-link" href="javascript:void(0);" @click="toPage('/', 0)"><i class="fas fa-home fa-fw mr-2"></i>首页<span class="sr-only">(current)</span></a>
                     </li>
-<!--                    <li class="nav-item active">-->
-<!--                        <a class="nav-link" href="index.html"><i class="fas fa-home fa-fw mr-2"></i>PHP</a>-->
-<!--                    </li>-->
-<!--                    <li class="nav-item active">-->
-<!--                        <a class="nav-link" href="index.html"><i class="fas fa-home fa-fw mr-2"></i>GO</a>-->
-<!--                    </li>-->
-<!--                    <li class="nav-item active">-->
-<!--                        <a class="nav-link" href="index.html"><i class="fas fa-home fa-fw mr-2"></i>前端</a>-->
-<!--                    </li>-->
-                    <!-- <li class="nav-item active">
-                        <a class="nav-link" href="javascript:void(0);" @click="toPage('/t')"><i class="fas fa-home fa-fw mr-2"></i>其他</a>
-                    </li> -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="javascript:void(0);" @click="toPage('/about')"><i class="fas fa-user fa-fw mr-2"></i>关于我</a>
+                    <li v-else  class="nav-item">
+                        <a class="nav-link" href="javascript:void(0);" @click="toPage('/', 0)"><i class="fas fa-home fa-fw mr-2"></i>首页<span class="sr-only">(current)</span></a>
+                    </li>
+                    <template v-for="(value,key,index) in catelist">
+                        <li v-if="current_nav_id == value.cate_id" class="nav-item active" >
+                            <a class="nav-link" href="javascript:void(0);" @click="toPage('/', value.cate_id)"><i class="fas fa-home fa-fw mr-2"></i>{{value.c_name}}</a>
+                        </li>
+                        <li v-else class="nav-item" >
+                            <a class="nav-link" href="javascript:void(0);" @click="toPage('/', value.cate_id)"><i class="fas fa-home fa-fw mr-2"></i>{{value.c_name}}</a>
+                        </li>
+                    </template>
+
+                    <li v-if="current_nav_id == -1" class="nav-item active">
+                        <a  class="nav-link" href="javascript:void(0);" @click="toPage('/about')"><i class="fas fa-user fa-fw mr-2"></i>关于我</a>
+                    </li>
+                    <li v-else class="nav-item">
+                        <a  class="nav-link" href="javascript:void(0);" @click="toPage('/about')"><i class="fas fa-user fa-fw mr-2"></i>关于我</a>
                     </li>
                 </ul>
 
@@ -49,17 +52,42 @@
 </template>
 
 <script>
+    import axios from 'axios'
     export default {
         name: 'blog-header',
         data() {
             return {
+                current_nav_id:0,
                 blog_name: "Weylau's Blog",
                 profile_image:require("../../assets/images/profile.png"),
-                toPage:function(page_router){
+                catelist:[],
+                toPage:function(page_router,cate_id){
+                    this.current_nav_id = cate_id
                     this.$router.push({
                         path: page_router,
+                        query: {
+                            cate_id: cate_id
+                        }
                     })
                 },
+
+            }
+        },
+        created() {
+            this.getCate()
+        },
+        methods: {
+            getCate:function () {
+                axios.get(this.Api.getCate).then(res => {
+                    if (res.data.ret == 0) {
+                        if(res.data.data.length > 0) {
+                            this.catelist = res.data.data
+                        } else {
+                            document.getElementById('morebtn').style.display="none";
+                        }
+
+                    }
+                })
             }
         }
     }

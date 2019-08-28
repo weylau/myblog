@@ -22,7 +22,7 @@
                         <div class="media-body">
                             <h3 class="title mb-1"><a href="javascript:void(0);" @click="toArticle(value.article_id)">{{value.title}}</a>
                             </h3>
-                            <div class="meta mb-1"><span class="date">{{value.update_date}} 发布</span>
+                            <div class="meta mb-1"><span class="date">{{value.modify_time}} 发布</span>
                                 <!--                                <span class="time">{{value.read_nums}} 阅读</span><span class="comment"><a href="#">{{value.comment_nums}} 评论</a></span>-->
                             </div>
                             <div class="intro">{{value.description}}...</div>
@@ -52,6 +52,7 @@
         // name: 'blog-index',
         data() {
             return {
+                cate_id:this.$route.query.cate_id?this.$route.query.cate_id:0,
                 page: 1,
                 page_size: 10,
                 msg: 'this is index',
@@ -65,17 +66,29 @@
                     })
                 },
                 getMore: function () {
-                    this.getList(this.page)
+                    this.getList(this.page, this.cate_id)
                 }
             }
         },
         components: {},
         created() {
-            this.getList(this.page)
+            this.getList()
+        },
+        watch:{
+            $route(to,from){
+                if(to.query.cate_id != this.cate_id) {
+                    this.cate_id = to.query.cate_id
+                    this.datalist = []
+                    this.page = 1
+                    document.getElementById('morebtn').style.display="block";
+                    this.getList()
+                }
+                console.log(to.query);
+            }
         },
         methods: {
-            getList: function (page) {
-                axios.get(this.Api.getList + "?page=" + this.page + "&page_size=" + this.page_size).then(res => {
+            getList: function () {
+                axios.get(this.Api.getList + "?page=" + this.page + "&page_size=" + this.page_size+ "&cate_id=" + this.cate_id).then(res => {
                     if (res.data.ret == 0) {
                         if(res.data.data.length > 0) {
                             res.data.data.forEach((item, index, arr) => {
