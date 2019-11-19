@@ -48,7 +48,7 @@
         },
         methods: {
             getDetail: function () {
-                axios.get(this.Api.getDetail + "?id=" + this.article_id).then(res => {
+                axios.get(this.Api.getDetail + "/" + this.article_id).then(res => {
                     if (res.data.ret == 0) {
                         html = res.data.data.contents
                         if (res.data.data.show_type == 2) {

@@ -1,7 +1,7 @@
 const BASEURL = "https://myblog-api.ajnote.cn/"
 const URL = {
-    getList:BASEURL+'article/list',
-    getDetail:BASEURL+'article/detail',
-    getCate:BASEURL+'article/cate'
+    getList:BASEURL+'articles',
+    getDetail:BASEURL+'article',
+    getCate:BASEURL+'categories'
 }
 export default URL
