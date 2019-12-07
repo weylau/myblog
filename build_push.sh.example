@@ -1,0 +1,9 @@
+#!/bin/bash
+echo "=========building========"
+npm run build --prod
+echo "==========压缩==========="
+rm -rf myblog.zip
+zip -r myblog.zip ./dist/*
+echo "==========推送到远端==========="
+scp myblog.zip ip:dir
+echo "==========结束！！！==========="

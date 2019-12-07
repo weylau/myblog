@@ -20,6 +20,7 @@
 
 <script>
     import axios from 'axios'
+    import marked from 'marked'
     import  hljs  from 'highlight.js';
 
     export default {
@@ -50,15 +51,26 @@
             getDetail: function () {
                 axios.get(this.Api.getDetail + "/" + this.article_id).then(res => {
                     if (res.data.ret == 0) {
-                        html = res.data.data.contents
+                        let html = ''
                         if (res.data.data.show_type == 2) {
-                            var showdown = require('showdown');
-                            var converter = new showdown.Converter();
-                            console.log(res.data.data.contents)
-                            var html = converter.makeHtml(res.data.data.contents);
+                            let rendererMD = new marked.Renderer()
+                            marked.setOptions({
+                                renderer: rendererMD,
+                                highlight: function (code) {
+                                    return hljs.highlightAuto(code).value;
+                                },
+                                gfm: true,
+                                tables: true,
+                                breaks: false,
+                                pedantic: false,
+                                sanitize: false,
+                                smartLists: true,
+                                smartypants: false
+                            });
+                            html = marked(res.data.data.contents);
                             res.data.data.contents = html;
-                            console.log(res.data.data.contents)
-
+                        } else {
+                            html = res.data.data.contents;
                         }
                         document.getElementById('show-content').innerHTML = html;
                         this.detail = res.data.data
@@ -66,17 +78,6 @@
                 })
             }
         },
-        directives: {
-            highlightjs: {
-                inserted (el) {
-                    // 遍历元素并且使用 highlight 进行处理
-                    const preEl = document.querySelectorAll('pre code');
-                    preEl.forEach(el => {
-                        hljs.highlightBlock(el);
-                    });
-                }
-            }
-        }
     }
 </script>
 
